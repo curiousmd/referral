@@ -48,10 +48,11 @@
 
       .form-row-columns { display: flex; flex-direction: row; gap: 8px; width: 100%; align-items: flex-start; }
       .form-column { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-      .form-column.wide { flex: 6; } /* 60% width */
-      .form-column.narrow { flex: 4; } /* 40% width */
 
-      .section { margin-bottom: 6px; padding: 6px; border: 1px solid #333; border-radius: 4px; background: #fff !important; break-inside: avoid; height: 100%; }
+      .section { margin-bottom: 6px; padding: 6px; border: 1px solid #333; border-radius: 4px; background: #fff !important; break-inside: avoid; }
+      .section.wide { flex: 6; }
+      .signature-section.narrow { flex: 4; }
+
       .section-title { font-size: 10.5px; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
       .form-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
       .form-group { flex: 1; min-width: 150px; }
@@ -59,11 +60,11 @@
       input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9px; padding: 2px 3px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; width: 100%; }
       textarea { height: 38px; }
       #patientAddress { height: 60px; } /* Give address more space */
-      .large-textarea { height: 100%; min-height: 120px; } /* Make textarea fill section */
+      .large-textarea { min-height: 120px; }
       .checkbox-group { gap: 4px; }
       .priority-options { gap: 8px; }
 
-      .signature-section { margin-top: 0; padding: 6px; border: 1px solid #000; border-radius: 4px; background: #fff !important; break-inside: avoid; height: 100%; }
+      .signature-section { margin-top: 0; padding: 6px; border: 1px solid #000; border-radius: 4px; background: #fff !important; break-inside: avoid; }
       .signature-box { width: 220px; height: 44px; border: 1px solid #000; }
       .signature-label { font-size: 9px; display: block; } /* Restore label */
 
@@ -101,8 +102,8 @@
     .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
     .form-row-columns { display: flex; flex-direction: row; gap: 18px; width: 100%; margin-bottom: 12px; align-items: flex-start; }
     .form-column { flex: 1; display: flex; flex-direction: column; gap: 18px; }
-    .form-column.wide { flex: 6; }
-    .form-column.narrow { flex: 4; }
+    .section.wide { flex: 6; }
+    .signature-section.narrow { flex: 4; }
     .form-group { flex: 1; min-width: 200px; }
     .form-group.full-width { flex: 100%; }
 
@@ -266,39 +267,35 @@
 
         <div class="form-row-columns">
           <!-- Clinical Information -->
-          <div class="form-column wide">
-            <div class="section">
-              <div class="section-title">CLINICAL INFORMATION</div>
-              <div class="form-row">
-                <div class="form-group full-width">
-                  <label for="reasonReferral">Reason for Referral *</label>
-                  <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
-                </div>
+          <div class="section wide">
+            <div class="section-title">CLINICAL INFORMATION</div>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="reasonReferral">Reason for Referral *</label>
+                <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
               </div>
             </div>
           </div>
 
           <!-- Signature Section -->
-          <div class="form-column narrow">
-            <div class="signature-section">
-              <div class="section-title">PHYSICIAN SIGNATURE</div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="signatureDate">Date *</label>
-                  <input type="date" id="signatureDate" name="signatureDate" required>
-                </div>
-                <div class="form-group">
-                  <label for="physicianLicense">Medical License Number</label>
-                  <input type="text" id="physicianLicense" name="physicianLicense">
-                </div>
+          <div class="signature-section narrow">
+            <div class="section-title">PHYSICIAN SIGNATURE</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="signatureDate">Date *</label>
+                <input type="date" id="signatureDate" name="signatureDate" required>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Physician Signature *</label>
-                  <div class="signature-box" id="signatureBox"></div>
-                  <div class="signature-label">Please sign above</div>
-                  <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear</button>
-                </div>
+              <div class="form-group">
+                <label for="physicianLicense">Medical License Number</label>
+                <input type="text" id="physicianLicense" name="physicianLicense">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Physician Signature *</label>
+                <div class="signature-box" id="signatureBox"></div>
+                <div class="signature-label">Please sign above</div>
+                <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear</button>
               </div>
             </div>
           </div>
