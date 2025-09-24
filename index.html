@@ -1,414 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>FasTreat Medical Referral Form</title>
-    <style>
-        /* ===== Brand Palette derived from the F icon ===== */
-        :root {
-            --ft-ink: #111111;               /* wordmark black */
-            --ft-accent-a: #eaf2ff;          /* soft blue */
-            --ft-accent-b: #fde2e4;          /* soft pink */
-            --ft-accent-c: #fff1d6;          /* soft peach */
-            --ft-surface: #ffffff;
-            --ft-border: #e3e3e3;
-            --ft-focus: rgba(17,17,17,0.25);
-        }
-        .ft-gradient {
-            background-image:
-              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
-              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
-              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FasTreat Medical Referral Form</title>
+  <style>
+    /* ===== Brand Palette derived from the F icon ===== */
+    :root {
+      --ft-ink: #111111;               /* wordmark black */
+      --ft-accent-a: #eaf2ff;          /* soft blue */
+      --ft-accent-b: #fde2e4;          /* soft pink */
+      --ft-accent-c: #fff1d6;          /* soft peach */
+      --ft-surface: #ffffff;
+      --ft-border: #e3e3e3;
+      --ft-focus: rgba(17,17,17,0.25);
+      --ft-danger: #d32f2f;            /* urgent red */
+    }
+    .ft-gradient {
+      background-image:
+        radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+        radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+        radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
+    }
 
-        /* ====== PRINT (Letter 8.5 x 11, force single page) ====== */
-        @media print {
-            .no-print { display: none !important; }
+    /* ===== PRINT (Letter 8.5 x 11) – force single page ===== */
+    @media print {
+      .no-print { display: none !important; }
 
-            /* tighter margins to maximize printable area */
-            @page { size: 8.5in 11in; margin: 0.35in; }
+      @page { size: 8.5in 11in; margin: 0.35in; }
 
-            html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 10px; line-height: 1.2; color: #000; }
+      html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 10px; line-height: 1.2; color: #000; -webkit-print-color-adjust: exact; }
 
-            .form-container { max-width: none; width: 100%; margin: 0; padding: 0.3in; box-shadow: none; border-radius: 0; border: 0; background: #fff; page-break-inside: avoid; overflow: visible; }
+      /* wrapper that clips overflow so we NEVER spill to page 2 */
+      #printWrapper { width: calc(8.5in - 0.7in); height: calc(11in - 0.7in); margin: 0; position: relative; overflow: hidden; }
 
-            .header { margin-bottom: 8px; padding: 8px 0 10px; border-bottom: 1px solid #000; background: none !important; }
-            .brand { justify-content: center; }
-            .logo { font-size: 16px; margin: 0; color: #000; background: none; box-shadow: none; padding: 0; font-weight: 800; }
-            .favicon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #000; border: 1px solid #333; background: none !important; box-shadow: none; }
+      .form-container { max-width: none; width: auto; margin: 0; padding: 0.3in; box-shadow: none; border-radius: 0; border: 0; background: #fff; position: absolute; top: 0; left: 0; transform-origin: top left; }
 
-            .clinic-info { font-size: 9px; margin-top: 4px; color: #000; }
-            .form-title { font-size: 14px; margin: 8px 0 6px 0; color: #000; font-weight: 800; }
-            .date-field { font-size: 9px; color: #000; }
+      .header { margin-bottom: 8px; padding: 8px 0 10px; border-bottom: 1px solid #000; background: none !important; }
+      .brand { justify-content: center; }
+      .logo { font-size: 16px; margin: 0; color: #000; font-weight: 800; }
+      .favicon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #000; border: 1px solid #333; }
 
-            .section { margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
-            .section-title { font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
-            .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
-            .form-group { min-width: 170px; }
-            label { font-weight: 700; margin-bottom: 2px; }
-            input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9.5px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
-            textarea { height: 44px; } .large-textarea { height: 60px; }
-            .checkbox-group { gap: 6px; }
-            .priority-options { gap: 10px; }
+      .clinic-info { font-size: 9px; margin-top: 4px; color: #000; }
+      .form-title { font-size: 14px; margin: 8px 0 6px 0; color: #000; font-weight: 800; }
+      .date-field { font-size: 9px; color: #000; }
 
-            .signature-section { margin-top: 8px; padding: 8px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
-            .signature-box { width: 220px; height: 44px; border: 1px solid #000; }
-            .signature-label { font-size: 9px; }
+      .section { margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
+      .section-title { font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
+      .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+      .form-group { min-width: 170px; }
+      label { font-weight: 700; margin-bottom: 2px; }
+      input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9.5px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
+      textarea { height: 44px; } .large-textarea { height: 60px; }
+      .checkbox-group { gap: 6px; }
+      .priority-options { gap: 10px; }
 
-            /* keep Urgent red even in print */
-            .urgent { color: #d32f2f !important; font-weight: bold; }
-        }
+      .signature-section { margin-top: 8px; padding: 8px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
+      .signature-box { width: 220px; height: 44px; border: 1px solid #000; }
+      .signature-label { font-size: 9px; }
 
-        /* ====== SCREEN ====== */
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f6f7f8; color: var(--ft-ink); }
+      .urgent { color: var(--ft-danger) !important; font-weight: bold; }
+    }
 
-        .form-container { max-width: 800px; margin: 0 auto; background: var(--ft-surface); padding: 28px; box-shadow: 0 0 10px rgba(0,0,0,0.08); border-radius: 16px; border: 1px solid var(--ft-border); }
+    /* ===== SCREEN ===== */
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f6f7f8; color: var(--ft-ink); }
 
-        .header { text-align: center; padding: 18px 16px 22px; margin-bottom: 24px; border-bottom: 2px solid var(--ft-ink); border-radius: 14px 14px 0 0; }
-        .header.ft-gradient { border-bottom-color: rgba(17,17,17,0.85); }
+    .form-container { max-width: 800px; margin: 0 auto; background: var(--ft-surface); padding: 28px; box-shadow: 0 0 10px rgba(0,0,0,0.08); border-radius: 16px; border: 1px solid var(--ft-border); }
 
-        .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
-        .favicon { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-size: 36px; font-weight: 800; color: var(--ft-ink); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-        .favicon.ft-gradient { border: 1px solid rgba(0,0,0,0.06); }
+    .header { text-align: center; padding: 18px 16px 22px; margin-bottom: 24px; border-bottom: 2px solid var(--ft-ink); border-radius: 14px 14px 0 0; position: relative; }
+    .header::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 12px; opacity: 0.65; background-image:
+      radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+      radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+      radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
+    }
 
-        .logo { color: var(--ft-ink); font-size: 28px; font-weight: 800; letter-spacing: 0.2px; }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+    .favicon { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-size: 36px; font-weight: 800; color: var(--ft-ink); box-shadow: 0 2px 6px rgba(0,0,0,0.08); background-image:
+      radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+      radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+      radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
 
-        .clinic-info { font-size: 12px; color: #3a3a3a; margin-top: 6px; }
-        .form-title { font-size: 20px; font-weight: 800; color: var(--ft-ink); margin: 14px 0 8px; }
+    .logo { color: var(--ft-ink); font-size: 28px; font-weight: 800; letter-spacing: 0.2px; }
 
-        .section { margin-bottom: 18px; border: 1px solid var(--ft-border); border-radius: 10px; padding: 16px; background: #fff; }
-        .section-title { font-size: 14px; font-weight: 800; color: var(--ft-ink); margin-bottom: 12px; border-bottom: 1px solid rgba(17,17,17,0.2); padding-bottom: 5px; }
+    .clinic-info { font-size: 12px; color: #3a3a3a; margin-top: 6px; }
+    .form-title { font-size: 20px; font-weight: 800; color: var(--ft-ink); margin: 14px 0 8px; }
 
-        .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
-        .form-group { flex: 1; min-width: 200px; }
-        .form-group.full-width { flex: 100%; }
+    .section { margin-bottom: 18px; border: 1px solid var(--ft-border); border-radius: 10px; padding: 16px; background: #fff; }
+    .section-title { font-size: 14px; font-weight: 800; color: var(--ft-ink); margin-bottom: 12px; border-bottom: 1px solid rgba(17,17,17,0.2); padding-bottom: 5px; }
 
-        label { display: block; font-weight: 700; margin-bottom: 5px; color: #222; }
+    .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+    .form-group { flex: 1; min-width: 200px; }
+    .form-group.full-width { flex: 100%; }
 
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { width: 100%; padding: 8px; border: 1px solid #cfcfcf; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: box-shadow 0.2s ease, border-color 0.2s ease; background: #fff; }
-        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, textarea:focus, select:focus { outline: none; border-color: #999; box-shadow: 0 0 0 3px var(--ft-focus); }
-        textarea { height: 80px; resize: vertical; } .large-textarea { height: 120px; }
+    label { display: block; font-weight: 700; margin-bottom: 5px; color: #222; }
 
-        .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
-        .checkbox-item { display: flex; align-items: center; gap: 6px; }
-        .checkbox-item input[type="checkbox"] { width: auto; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { width: 100%; padding: 8px; border: 1px solid #cfcfcf; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: box-shadow 0.2s ease, border-color 0.2s ease; background: #fff; }
+    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, textarea:focus, select:focus { outline: none; border-color: #999; box-shadow: 0 0 0 3px var(--ft-focus); }
+    textarea { height: 80px; resize: vertical; } .large-textarea { height: 120px; }
 
-        .signature-section { margin-top: 20px; padding: 16px; border: 1px solid var(--ft-ink); border-radius: 10px; background: #fff; }
-        .signature-box { width: 300px; height: 80px; border: 2px solid #000; margin: 10px 0; position: relative; background: white; }
-        .signature-label { font-size: 12px; color: #666; margin-top: 5px; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+    .checkbox-item { display: flex; align-items: center; gap: 6px; }
+    .checkbox-item input[type="checkbox"] { width: auto; }
 
-        .buttons { text-align: center; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ft-border); }
-        .btn { background: #111; color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 15px; margin: 0 8px; transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.16); }
-        .btn-secondary { background: #222; }
-        .btn-secondary:hover { opacity: 0.92; }
+    .signature-section { margin-top: 20px; padding: 16px; border: 1px solid var(--ft-ink); border-radius: 10px; background: #fff; }
+    .signature-box { width: 300px; height: 80px; border: 2px solid #000; margin: 10px 0; position: relative; background: white; }
+    .signature-box canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; position: absolute; inset: 0; }
+    .signature-label { font-size: 12px; color: #666; margin-top: 5px; }
 
-        .priority-options { display: flex; gap: 18px; margin-top: 8px; }
-        .priority-option { display: flex; align-items: center; gap: 6px; }
-        .urgent { color: #d32f2f; font-weight: 800; }
+    .buttons { text-align: center; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ft-border); }
+    .btn { background: #111; color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 15px; margin: 0 8px; transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.16); }
+    .btn-secondary { background: #222; }
+    .btn-secondary:hover { opacity: 0.92; }
 
-        .date-field { font-weight: normal; color: #555; margin-left: 20px; }
+    .priority-options { display: flex; gap: 18px; margin-top: 8px; }
+    .priority-option { display: flex; align-items: center; gap: 6px; }
+    .urgent { color: var(--ft-danger); font-weight: 800; }
 
-        /* Apply gradients to header and favicon on screen */
-        .header.ft-gradient, .favicon.ft-gradient { background: none; }
-        .header.ft-gradient { position: relative; }
-        .header.ft-gradient::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 12px; opacity: 0.65; }
-        .header.ft-gradient::before { background-image:
-              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
-              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
-              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
-        }
-        .favicon.ft-gradient { background-image:
-              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
-              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
-              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
-        }
-    </style>
+    .date-field { font-weight: normal; color: #555; margin-left: 20px; }
+  </style>
 </head>
 <body>
+  <div id="printWrapper">
     <div class="form-container">
-        <div class="header ft-gradient">
-            <div class="brand">
-                <div class="favicon ft-gradient" aria-hidden="true">F</div>
-                <div class="logo" aria-label="FasTreat">FasTreat</div>
+      <div class="header">
+        <div class="brand">
+          <div class="favicon" aria-hidden="true">F</div>
+          <div class="logo" aria-label="FasTreat">FasTreat</div>
+        </div>
+        <div class="clinic-info">
+          2000 McGill College Avenue, 6th Floor, Montreal, Quebec, H3A 3H3<br>
+          Tel: 778-651-3154 | Fax: 844-593-1537 | Email: support@fastreat.com
+        </div>
+        <div class="form-title">MEDICAL REFERRAL FORM</div>
+      </div>
+
+      <form id="referralForm">
+        <!-- Patient Information -->
+        <div class="section">
+          <div class="section-title">PATIENT INFORMATION</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patientLastName">Last Name *</label>
+              <input type="text" id="patientLastName" name="patientLastName" required>
             </div>
-            <div class="clinic-info">
-                2000 McGill College Avenue, 6th Floor, Montreal, Quebec, H3A 3H3<br>
-                Tel: 778-651-3154 | Fax: 844-593-1537 | Email: support@fastreat.com
+            <div class="form-group">
+              <label for="patientFirstName">First Name *</label>
+              <input type="text" id="patientFirstName" name="patientFirstName" required>
             </div>
-            <div class="form-title">MEDICAL REFERRAL FORM</div>
-            <div class="date-field">Date:
-                <input type="date" id="referralDate" style="width: 150px; display: inline-block;">
+            <div class="form-group">
+              <label for="patientDOB">Date of Birth</label>
+              <input type="date" id="patientDOB" name="patientDOB">
             </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="patientPhone">Phone Number</label>
+              <input type="tel" id="patientPhone" name="patientPhone">
+            </div>
+            <div class="form-group">
+              <label for="healthCard">Health Card Number</label>
+              <input type="text" id="healthCard" name="healthCard">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="patientAddress">Address</label>
+              <textarea id="patientAddress" name="patientAddress"></textarea>
+            </div>
+          </div>
         </div>
 
-        <form id="referralForm">
-            <!-- Patient Information -->
-            <div class="section">
-                <div class="section-title">PATIENT INFORMATION</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="patientLastName">Last Name *</label>
-                        <input type="text" id="patientLastName" name="patientLastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="patientFirstName">First Name *</label>
-                        <input type="text" id="patientFirstName" name="patientFirstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="patientDOB">Date of Birth</label>
-                        <input type="date" id="patientDOB" name="patientDOB">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="patientPhone">Phone Number</label>
-                        <input type="tel" id="patientPhone" name="patientPhone">
-                    </div>
-                    <div class="form-group">
-                        <label for="healthCard">Health Card Number</label>
-                        <input type="text" id="healthCard" name="healthCard">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="patientAddress">Address</label>
-                        <textarea id="patientAddress" name="patientAddress"></textarea>
-                    </div>
-                </div>
+        <!-- Referring Physician Information -->
+        <div class="section">
+          <div class="section-title">REFERRING PHYSICIAN INFORMATION</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="physicianName">Physician Name *</label>
+              <input type="text" id="physicianName" name="physicianName" required>
             </div>
-
-            <!-- Referring Physician Information -->
-            <div class="section">
-                <div class="section-title">REFERRING PHYSICIAN INFORMATION</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="physicianName">Physician Name *</label>
-                        <input type="text" id="physicianName" name="physicianName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="physicianSpecialty">Specialty</label>
-                        <input type="text" id="physicianSpecialty" name="physicianSpecialty">
-                    </div>
-                </div>
+            <div class="form-group">
+              <label for="physicianSpecialty">Specialty</label>
+              <input type="text" id="physicianSpecialty" name="physicianSpecialty">
             </div>
+          </div>
+        </div>
 
-            <!-- Referral Details -->
-            <div class="section">
-                <div class="section-title">REFERRAL DETAILS</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="referralTo">Refer To (Specialty/Department) *</label>
-                        <select id="referralTo" name="referralTo" required onchange="toggleOtherField()">
-                            <option value="">Select Specialty...</option>
-                            <option value="Cardiology">Cardiology</option>
-                            <option value="Dermatology">Dermatology</option>
-                            <option value="Endocrinology">Endocrinology</option>
-                            <option value="Gastroenterology">Gastroenterology</option>
-                            <option value="Neurology">Neurology</option>
-                            <option value="Oncology">Oncology</option>
-                            <option value="Orthopedics">Orthopedics</option>
-                            <option value="Psychiatry">Psychiatry</option>
-                            <option value="Pulmonology">Pulmonology</option>
-                            <option value="Radiology">Radiology</option>
-                            <option value="Surgery">Surgery</option>
-                            <option value="Urology">Urology</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="specificPhysician">Specific Physician (if any)</label>
-                        <input type="text" id="specificPhysician" name="specificPhysician">
-                    </div>
-                </div>
-
-                <div class="form-row" id="otherSpecialtyRow" style="display: none;">
-                    <div class="form-group full-width">
-                        <label for="otherSpecialty">Please specify other specialty/department *</label>
-                        <input type="text" id="otherSpecialty" name="otherSpecialty" placeholder="Enter specialty/department name...">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label>Priority Level *</label>
-                        <div class="priority-options">
-                            <div class="priority-option">
-                                <input type="radio" id="routine" name="priority" value="routine" required>
-                                <label for="routine">Routine</label>
-                            </div>
-                            <div class="priority-option">
-                                <input type="radio" id="urgent" name="priority" value="urgent">
-                                <label for="urgent" class="urgent">Urgent</label>
-                            </div>
-                            <!-- Emergency removed per request -->
-                        </div>
-                    </div>
-                </div>
+        <!-- Referral Details -->
+        <div class="section">
+          <div class="section-title">REFERRAL DETAILS</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="referralTo">Refer To (Specialty/Department) *</label>
+              <select id="referralTo" name="referralTo" required onchange="toggleOtherField()">
+                <option value="">Select Specialty...</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Endocrinology">Endocrinology</option>
+                <option value="Gastroenterology">Gastroenterology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Oncology">Oncology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Psychiatry">Psychiatry</option>
+                <option value="Pulmonology">Pulmonology</option>
+                <option value="Radiology">Radiology</option>
+                <option value="Surgery">Surgery</option>
+                <option value="Urology">Urology</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-
-            <!-- Clinical Information -->
-            <div class="section">
-                <div class="section-title">CLINICAL INFORMATION</div>
-                <div class="form-row">
-                    <div class="form-group full-width">
-                        <label for="reasonReferral">Reason for Referral *</label>
-                        <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
-                    </div>
-                </div>
+            <div class="form-group">
+              <label for="specificPhysician">Specific Physician (if any)</label>
+              <input type="text" id="specificPhysician" name="specificPhysician">
             </div>
+          </div>
 
-            <!-- Signature Section -->
-            <div class="signature-section">
-                <div class="section-title">PHYSICIAN SIGNATURE</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="signatureDate">Date *</label>
-                        <input type="date" id="signatureDate" name="signatureDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="physicianLicense">Medical License Number</label>
-                        <input type="text" id="physicianLicense" name="physicianLicense">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Physician Signature *</label>
-                        <div class="signature-box" id="signatureBox"></div>
-                        <div class="signature-label">Please sign above (click and drag to draw signature)</div>
-                        <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear Signature</button>
-                    </div>
-                </div>
+          <div class="form-row" id="otherSpecialtyRow" style="display: none;">
+            <div class="form-group full-width">
+              <label for="otherSpecialty">Please specify other specialty/department *</label>
+              <input type="text" id="otherSpecialty" name="otherSpecialty" placeholder="Enter specialty/department name...">
             </div>
+          </div>
 
-            <!-- Buttons -->
-            <div class="buttons no-print">
-                <button type="button" class="btn" onclick="printForm()">Save as PDF</button>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label>Priority Level *</label>
+              <div class="priority-options">
+                <div class="priority-option">
+                  <input type="radio" id="routine" name="priority" value="routine" required>
+                  <label for="routine">Routine</label>
+                </div>
+                <div class="priority-option">
+                  <input type="radio" id="urgent" name="priority" value="urgent">
+                  <label for="urgent" class="urgent">Urgent</label>
+                </div>
+                <!-- Emergency removed per request -->
+              </div>
             </div>
-        </form>
+          </div>
+        </div>
+
+        <!-- Clinical Information -->
+        <div class="section">
+          <div class="section-title">CLINICAL INFORMATION</div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="reasonReferral">Reason for Referral *</label>
+              <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature-section">
+          <div class="section-title">PHYSICIAN SIGNATURE</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="signatureDate">Date *</label>
+              <input type="date" id="signatureDate" name="signatureDate" required>
+            </div>
+            <div class="form-group">
+              <label for="physicianLicense">Medical License Number</label>
+              <input type="text" id="physicianLicense" name="physicianLicense">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Physician Signature *</label>
+              <div class="signature-box" id="signatureBox"></div>
+              <div class="signature-label">Please sign above (click and drag to draw signature)</div>
+              <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear Signature</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons no-print">
+          <button type="button" class="btn" onclick="printForm()">Save as PDF</button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <script>
-        // Set today's date
-        document.getElementById('referralDate').valueAsDate = new Date();
-        document.getElementById('signatureDate').valueAsDate = new Date();
+  <script>
+    // ===== Dates =====
+    /* referralDate field removed by request */
+    document.getElementById('signatureDate').valueAsDate = new Date();
 
-        // Simple signature functionality
-        let isDrawing = false;
-        const signatureBox = document.getElementById('signatureBox');
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+    // ===== Signature Pad (pointer events, HiDPI-safe) =====
+    const signatureBox = document.getElementById('signatureBox');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    signatureBox.appendChild(canvas);
 
-        canvas.width = 298;
-        canvas.height = 78;
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.border = 'none';
-        signatureBox.appendChild(canvas);
+    let hasInk = false;
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
+    function resizeSignatureCanvas() {
+      const rect = signatureBox.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // so we can draw in CSS pixels
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#000';
+    }
+    resizeSignatureCanvas();
+    window.addEventListener('resize', resizeSignatureCanvas);
 
-        // Touch events for mobile
-        canvas.addEventListener('touchstart', handleTouch, { passive: false });
-        canvas.addEventListener('touchmove', handleTouch, { passive: false });
-        canvas.addEventListener('touchend', stopDrawing);
+    let drawing = false;
+    function p(e){ const r = canvas.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
 
-        function startDrawing(e) {
-            isDrawing = true;
-            ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        }
+    function down(e){ e.preventDefault(); drawing = true; const pos = p(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
+    function move(e){ if(!drawing) return; e.preventDefault(); const pos = p(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); hasInk = true; }
+    function up(){ drawing = false; }
 
-        function draw(e) {
-            if (!isDrawing) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-        }
+    if (window.PointerEvent) {
+      canvas.addEventListener('pointerdown', down);
+      canvas.addEventListener('pointermove', move);
+      canvas.addEventListener('pointerup', up);
+      canvas.addEventListener('pointercancel', up);
+      canvas.addEventListener('pointerleave', up);
+    } else {
+      // Fallback mouse/touch
+      canvas.addEventListener('mousedown', down);
+      canvas.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', up);
+      canvas.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; down({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
+      canvas.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; move({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
+      canvas.addEventListener('touchend', up);
+    }
 
-        function stopDrawing() { isDrawing = false; }
+    // Expose globally for the button
+    window.clearSignature = function clearSignature(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      hasInk = false;
+    };
 
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const type =
-                e.type === 'touchstart' ? 'mousedown' :
-                e.type === 'touchmove'  ? 'mousemove' : 'mouseup';
-            const mouseEvent = new MouseEvent(type, {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }
+    // ===== Print scaling: fit to ONE page =====
+    const PRINT_INCH = 96;           // CSS px per inch (browser logical)
+    const PRINT_MARGIN_IN = 0.35;    // must match @page margin
 
-        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function computeScale(){
+      const container = document.querySelector('.form-container');
+      const pageW = (8.5 - (2 * PRINT_MARGIN_IN)) * PRINT_INCH;
+      const pageH = (11  - (2 * PRINT_MARGIN_IN)) * PRINT_INCH;
+      const contentW = container.scrollWidth;
+      const contentH = container.scrollHeight;
+      return Math.min(1, pageW / contentW, pageH / contentH);
+    }
 
-        /* Fit document to a single Letter page when printing */
-        const INCH = 96;                // CSS px per inch
-        const PRINT_MARGIN_IN = 0.35;   // must match @page margin
+    function fitToOnePage(){
+      const container = document.querySelector('.form-container');
+      if(!container) return;
+      container.style.transformOrigin = 'top left';
+      container.style.transform = `scale(${computeScale()})`;
+    }
 
-        function fitToOnePage() {
-            const container = document.querySelector('.form-container');
-            if (!container) return;
-            // reset any previous scaling before measuring
-            container.style.transform = '';
-            container.style.transformOrigin = '';
+    function resetFit(){
+      const container = document.querySelector('.form-container');
+      if(!container) return;
+      container.style.transform = '';
+    }
 
-            const pageWidthPx  = (8.5 - (2 * PRINT_MARGIN_IN)) * INCH;
-            const pageHeightPx = (11  - (2 * PRINT_MARGIN_IN)) * INCH;
+    window.printForm = function printForm(){
+      fitToOnePage();
+      window.print();
+      setTimeout(resetFit, 500);
+    };
 
-            const rect = container.getBoundingClientRect();
-            const scaleW = pageWidthPx  / rect.width;
-            const scaleH = pageHeightPx / rect.height;
-            const scale = Math.min(1, scaleW, scaleH);
+    window.addEventListener('beforeprint', fitToOnePage);
+    window.addEventListener('afterprint', resetFit);
 
-            container.style.transformOrigin = 'top left';
-            container.style.transform = `scale(${scale})`;
-        }
+    // ===== Toggle Other specialty =====
+    function toggleOtherField(){
+      const select = document.getElementById('referralTo');
+      const otherRow = document.getElementById('otherSpecialtyRow');
+      const otherInput = document.getElementById('otherSpecialty');
+      if (select.value === 'Other') { otherRow.style.display = 'block'; otherInput.required = true; }
+      else { otherRow.style.display = 'none'; otherInput.required = false; otherInput.value=''; }
+    }
+    window.toggleOtherField = toggleOtherField; // ensure callable from inline onchange
 
-        function resetFit() {
-            const container = document.querySelector('.form-container');
-            if (!container) return;
-            container.style.transform = '';
-            container.style.transformOrigin = '';
-        }
-
-        function printForm() {
-            fitToOnePage();
-            window.print();
-            // Fallback in case afterprint doesn't fire
-            setTimeout(resetFit, 1000);
-        }
-
-        // Also fit automatically if user triggers Ctrl+P
-        window.addEventListener('beforeprint', fitToOnePage);
-        window.addEventListener('afterprint', resetFit);
-
-        // Initialize signature canvas
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-
-        // Toggle "Other" specialty field
-        function toggleOtherField() {
-            const select = document.getElementById('referralTo');
-            const otherRow = document.getElementById('otherSpecialtyRow');
-            const otherInput = document.getElementById('otherSpecialty');
-
-            if (select.value === 'Other') {
-                otherRow.style.display = 'block';
-                otherInput.required = true;
-            } else {
-                otherRow.style.display = 'none';
-                otherInput.required = false;
-                otherInput.value = '';
-            }
-        }
-    </script>
+    // ===== Lightweight self-tests (console) =====
+    (function runSelfTests(){
+      try {
+        console.assert(typeof window.clearSignature === 'function', 'clearSignature should be defined');
+        const s = computeScale();
+        console.assert(s > 0 && s <= 1, 'computeScale should return 0<s<=1, got ' + s);
+        // Toggle test
+        const sel = document.getElementById('referralTo');
+        sel.value = 'Other'; toggleOtherField();
+        console.assert(document.getElementById('otherSpecialty').required === true, 'Other specialty should become required');
+        sel.value = ''; toggleOtherField();
+      } catch (e) {
+        console.warn('Self-test warning:', e);
+      }
+    })();
+  </script>
 </body>
 </html>
