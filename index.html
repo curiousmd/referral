@@ -46,7 +46,7 @@
       .form-title { font-size: 14px; margin: 0; color: #000; font-weight: 800; }
       .date-field { font-size: 9px; color: #000; }
 
-      .form-row-columns { display: flex; flex-direction: row; gap: 8px; width: 100%; }
+      .form-row-columns { display: flex; flex-direction: row; gap: 8px; width: 100%; align-items: flex-start; }
       .form-column { flex: 1; display: flex; flex-direction: column; gap: 6px; }
       .form-column.wide { flex: 6; } /* 60% width */
       .form-column.narrow { flex: 4; } /* 40% width */
@@ -99,7 +99,7 @@
     .section-title { font-size: 14px; font-weight: 800; color: var(--ft-ink); margin-bottom: 12px; border-bottom: 1px solid rgba(17,17,17,0.2); padding-bottom: 5px; }
 
     .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
-    .form-row-columns { display: flex; flex-direction: row; gap: 18px; width: 100%; margin-bottom: 12px; }
+    .form-row-columns { display: flex; flex-direction: row; gap: 18px; width: 100%; margin-bottom: 12px; align-items: flex-start; }
     .form-column { flex: 1; display: flex; flex-direction: column; gap: 18px; }
     .form-column.wide { flex: 6; }
     .form-column.narrow { flex: 4; }
@@ -110,7 +110,8 @@
 
     input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { width: 100%; padding: 8px; border: 1px solid #cfcfcf; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: box-shadow 0.2s ease, border-color 0.2s ease; background: #fff; }
     input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, textarea:focus, select:focus { outline: none; border-color: #999; box-shadow: 0 0 0 3px var(--ft-focus); }
-    textarea { height: 80px; resize: vertical; } .large-textarea { height: 120px; }
+    textarea { height: 80px; resize: vertical; } 
+    .large-textarea { height: 120px; }
 
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
     .checkbox-item { display: flex; align-items: center; gap: 6px; }
