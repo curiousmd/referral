@@ -1,322 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FasTreat Medical Referral Form</title>
     <style>
+        /* ===== Brand Palette derived from the F icon ===== */
+        :root {
+            --ft-ink: #111111;               /* wordmark black */
+            --ft-accent-a: #eaf2ff;          /* soft blue */
+            --ft-accent-b: #fde2e4;          /* soft pink */
+            --ft-accent-c: #fff1d6;          /* soft peach */
+            --ft-surface: #ffffff;
+            --ft-border: #e3e3e3;
+            --ft-focus: rgba(17,17,17,0.25);
+        }
+        .ft-gradient {
+            background-image:
+              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
+        }
+
+        /* ====== PRINT (Letter 8.5 x 11) ====== */
         @media print {
             .no-print { display: none !important; }
-            body { 
-                margin: 0; 
-                padding: 0;
-                width: 8.5in;
-                height: 11in;
-                font-size: 12px;
-            }
-            .form-container {
-                max-width: none;
-                width: 100%;
-                margin: 0;
-                padding: 0.5in;
-                box-shadow: none;
-                border-radius: 0;
-                page-break-inside: avoid;
-            }
-            .header {
-                margin-bottom: 20px;
-                padding-bottom: 15px;
-            }
-            .logo {
-                width: 150px;
-                height: 45px;
-                font-size: 20px;
-                margin-bottom: 10px;
-            }
-            .clinic-info {
-                font-size: 10px;
-                margin-top: 8px;
-            }
-            .form-title {
-                font-size: 18px;
-                margin: 15px 0 8px 0;
-            }
-            .section {
-                margin-bottom: 15px;
-                padding: 12px;
-                break-inside: avoid;
-            }
-            .section-title {
-                font-size: 14px;
-                margin-bottom: 10px;
-                padding-bottom: 3px;
-            }
-            .form-row {
-                margin-bottom: 10px;
-            }
-            input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select {
-                font-size: 11px;
-                padding: 4px;
-                border: 1px solid #333;
-            }
-            textarea {
-                height: 60px;
-            }
-            .large-textarea {
-                height: 80px;
-            }
-            .signature-section {
-                margin-top: 20px;
-                padding: 12px;
-                break-inside: avoid;
-            }
-            .signature-box {
-                width: 250px;
-                height: 60px;
-            }
-            .signature-label {
-                font-size: 10px;
-            }
-            .date-field {
-                font-size: 11px;
-            }
-            .checkbox-group {
-                gap: 10px;
-            }
-            .priority-options {
-                gap: 15px;
-            }
-            @page {
-                size: 8.5in 11in;
-                margin: 0.5in;
-            }
+
+            @page { size: 8.5in 11in; margin: 0.5in; }
+
+            html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 11px; line-height: 1.25; color: #000; }
+
+            .form-container { max-width: none; width: 100%; margin: 0; padding: 0.4in; box-shadow: none; border-radius: 0; border: 0; background: #fff; page-break-inside: avoid; }
+
+            .header { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--ft-ink); background: none !important; }
+
+            .brand { justify-content: center; }
+            .logo { font-size: 18px; margin: 0; color: #000; background: none; box-shadow: none; padding: 0; }
+            .favicon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #000; border: 1px solid #333; background: none !important; box-shadow: none; }
+
+            .clinic-info { font-size: 9px; margin-top: 6px; color: #000; }
+            .form-title { font-size: 16px; margin: 12px 0 6px 0; color: #000; }
+            .date-field { font-size: 10px; color: #000; }
+
+            .section { margin-bottom: 10px; padding: 10px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
+            .section-title { font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 3px; color: #000; }
+            .form-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+            .form-group { min-width: 180px; }
+            label { font-weight: bold; margin-bottom: 3px; }
+            input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 10px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
+            textarea { height: 50px; } .large-textarea { height: 70px; }
+            .checkbox-group { gap: 8px; }
+            .priority-options { gap: 12px; }
+            .signature-section { margin-top: 12px; padding: 10px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
+            .signature-box { width: 230px; height: 50px; border: 1px solid #000; }
+            .signature-label { font-size: 9px; }
+
+            /* keep Urgent red even in print */
+            .urgent { color: #d32f2f !important; font-weight: bold; }
         }
-        
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+
+        /* ====== SCREEN ====== */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f6f7f8; color: var(--ft-ink); }
+
+        .form-container { max-width: 800px; margin: 0 auto; background: var(--ft-surface); padding: 28px; box-shadow: 0 0 10px rgba(0,0,0,0.08); border-radius: 16px; border: 1px solid var(--ft-border); }
+
+        .header { text-align: center; padding: 18px 16px 22px; margin-bottom: 24px; border-bottom: 2px solid var(--ft-ink); border-radius: 14px 14px 0 0; }
+        .header.ft-gradient { border-bottom-color: rgba(17,17,17,0.85); }
+
+        .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+        .favicon { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-size: 36px; font-weight: 800; color: var(--ft-ink); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .favicon.ft-gradient { border: 1px solid rgba(0,0,0,0.06); }
+
+        .logo { color: var(--ft-ink); font-size: 28px; font-weight: 800; letter-spacing: 0.2px; }
+
+        .clinic-info { font-size: 12px; color: #3a3a3a; margin-top: 6px; }
+        .form-title { font-size: 20px; font-weight: 800; color: var(--ft-ink); margin: 14px 0 8px; }
+
+        .section { margin-bottom: 18px; border: 1px solid var(--ft-border); border-radius: 10px; padding: 16px; background: #fff; }
+        .section-title { font-size: 14px; font-weight: 800; color: var(--ft-ink); margin-bottom: 12px; border-bottom: 1px solid rgba(17,17,17,0.2); padding-bottom: 5px; }
+
+        .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group.full-width { flex: 100%; }
+
+        label { display: block; font-weight: 700; margin-bottom: 5px; color: #222; }
+
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { width: 100%; padding: 8px; border: 1px solid #cfcfcf; border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: box-shadow 0.2s ease, border-color 0.2s ease; background: #fff; }
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="date"]:focus, textarea:focus, select:focus { outline: none; border-color: #999; box-shadow: 0 0 0 3px var(--ft-focus); }
+        textarea { height: 80px; resize: vertical; } .large-textarea { height: 120px; }
+
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+        .checkbox-item { display: flex; align-items: center; gap: 6px; }
+        .checkbox-item input[type="checkbox"] { width: auto; }
+
+        .signature-section { margin-top: 20px; padding: 16px; border: 1px solid var(--ft-ink); border-radius: 10px; background: #fff; }
+        .signature-box { width: 300px; height: 80px; border: 2px solid #000; margin: 10px 0; position: relative; background: white; }
+        .signature-label { font-size: 12px; color: #666; margin-top: 5px; }
+
+        .buttons { text-align: center; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--ft-border); }
+        .btn { background: #111; color: #fff; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-size: 15px; margin: 0 8px; transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.16); }
+        .btn-secondary { background: #222; }
+        .btn-secondary:hover { opacity: 0.92; }
+
+        .priority-options { display: flex; gap: 18px; margin-top: 8px; }
+        .priority-option { display: flex; align-items: center; gap: 6px; }
+        .urgent { color: #d32f2f; font-weight: 800; }
+
+        .date-field { font-weight: normal; color: #555; margin-left: 20px; }
+
+        /* Apply gradients to header and favicon on screen */
+        .header.ft-gradient, .favicon.ft-gradient { background: none; }
+        .header.ft-gradient { position: relative; }
+        .header.ft-gradient::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 12px; opacity: 0.65; }
+        .header.ft-gradient::before { background-image:
+              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
         }
-        
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        
-        .header {
-            text-align: center;
-            border-bottom: 3px solid #00a651;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .logo {
-            width: 200px;
-            height: 60px;
-            margin: 0 auto 15px;
-            background: linear-gradient(135deg, #00a651, #28b463);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,166,81,0.3);
-        }
-        
-        .clinic-info {
-            font-size: 12px;
-            color: #2c5234;
-            margin-top: 10px;
-        }
-        
-        .form-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00a651;
-            margin: 20px 0 10px 0;
-        }
-        
-        .section {
-            margin-bottom: 25px;
-            border: 1px solid #c8e6c9;
-            border-radius: 5px;
-            padding: 20px;
-            background: #fafffe;
-        }
-        
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #00a651;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #00a651;
-            padding-bottom: 5px;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .form-group.full-width {
-            flex: 100%;
-        }
-        
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #a5d6a7;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        
-        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, 
-        input[type="date"]:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #00a651;
-            box-shadow: 0 0 0 2px rgba(0,166,81,0.2);
-        }
-        
-        textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        
-        .large-textarea {
-            height: 120px;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-        }
-        
-        .signature-section {
-            margin-top: 30px;
-            padding: 20px;
-            border: 2px solid #00a651;
-            border-radius: 5px;
-            background: linear-gradient(135deg, #f1f8e9, #e8f5e8);
-        }
-        
-        .signature-box {
-            width: 300px;
-            height: 80px;
-            border: 2px solid #2e7d32;
-            margin: 10px 0;
-            position: relative;
-            background: white;
-        }
-        
-        .signature-label {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        .buttons {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #00a651, #28b463);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 0 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,166,81,0.3);
-        }
-        
-        .btn:hover {
-            background: linear-gradient(135deg, #388e3c, #2e7d32);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,166,81,0.4);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #66bb6a, #4caf50);
-        }
-        
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #4caf50, #388e3c);
-        }
-        
-        .priority-options {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-        }
-        
-        .priority-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .urgent {
-            color: #d63384;
-            font-weight: bold;
-        }
-        
-        .date-field {
-            font-weight: normal;
-            color: #666;
-            margin-left: 20px;
+        .favicon.ft-gradient { background-image:
+              radial-gradient(120% 120% at 10% 10%, var(--ft-accent-a) 0%, transparent 40%),
+              radial-gradient(120% 120% at 90% 20%, var(--ft-accent-b) 0%, transparent 45%),
+              radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <div class="header">
-            <div class="logo">FasTreat</div>
+        <div class="header ft-gradient">
+            <div class="brand">
+                <div class="favicon ft-gradient" aria-hidden="true">F</div>
+                <div class="logo" aria-label="FasTreat">FasTreat</div>
+            </div>
             <div class="clinic-info">
                 2000 McGill College Avenue, 6th Floor, Montreal, Quebec, H3A 3H3<br>
                 Tel: 778-651-3154 | Fax: 844-593-1537 | Email: support@fastreat.com
             </div>
             <div class="form-title">MEDICAL REFERRAL FORM</div>
-            <div class="date-field">Date: <input type="date" id="referralDate" style="width: 150px; display: inline-block;"></div>
+            <div class="date-field">Date:
+                <input type="date" id="referralDate" style="width: 150px; display: inline-block;">
+            </div>
         </div>
 
         <form id="referralForm">
@@ -398,12 +221,14 @@
                         <input type="text" id="specificPhysician" name="specificPhysician">
                     </div>
                 </div>
+
                 <div class="form-row" id="otherSpecialtyRow" style="display: none;">
                     <div class="form-group full-width">
                         <label for="otherSpecialty">Please specify other specialty/department *</label>
                         <input type="text" id="otherSpecialty" name="otherSpecialty" placeholder="Enter specialty/department name...">
                     </div>
                 </div>
+
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label>Priority Level *</label>
@@ -416,10 +241,7 @@
                                 <input type="radio" id="urgent" name="priority" value="urgent">
                                 <label for="urgent" class="urgent">Urgent</label>
                             </div>
-                            <div class="priority-option">
-                                <input type="radio" id="emergency" name="priority" value="emergency">
-                                <label for="emergency" class="urgent">Emergency</label>
-                            </div>
+                            <!-- Emergency removed per request -->
                         </div>
                     </div>
                 </div>
@@ -454,7 +276,7 @@
                         <label>Physician Signature *</label>
                         <div class="signature-box" id="signatureBox"></div>
                         <div class="signature-label">Please sign above (click and drag to draw signature)</div>
-                        <button type="button" class="btn btn-secondary" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear Signature</button>
+                        <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear Signature</button>
                     </div>
                 </div>
             </div>
@@ -473,10 +295,10 @@
 
         // Simple signature functionality
         let isDrawing = false;
-        let signatureBox = document.getElementById('signatureBox');
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        
+        const signatureBox = document.getElementById('signatureBox');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
         canvas.width = 298;
         canvas.height = 78;
         canvas.style.width = '100%';
@@ -490,81 +312,54 @@
         canvas.addEventListener('mouseout', stopDrawing);
 
         // Touch events for mobile
-        canvas.addEventListener('touchstart', handleTouch);
-        canvas.addEventListener('touchmove', handleTouch);
+        canvas.addEventListener('touchstart', handleTouch, { passive: false });
+        canvas.addEventListener('touchmove', handleTouch, { passive: false });
         canvas.addEventListener('touchend', stopDrawing);
 
         function startDrawing(e) {
             isDrawing = true;
             ctx.beginPath();
-            let rect = canvas.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
             ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
         }
 
         function draw(e) {
             if (!isDrawing) return;
-            let rect = canvas.getBoundingClientRect();
+            const rect = canvas.getBoundingClientRect();
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         }
 
-        function stopDrawing() {
-            isDrawing = false;
-        }
+        function stopDrawing() { isDrawing = false; }
 
         function handleTouch(e) {
             e.preventDefault();
-            let touch = e.touches[0];
-            let mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
-                                          e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+            const touch = e.touches[0];
+            const type =
+                e.type === 'touchstart' ? 'mousedown' :
+                e.type === 'touchmove'  ? 'mousemove' : 'mouseup';
+            const mouseEvent = new MouseEvent(type, {
                 clientX: touch.clientX,
                 clientY: touch.clientY
             });
             canvas.dispatchEvent(mouseEvent);
         }
 
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        function clearForm() {
-            if (confirm('Are you sure you want to clear all form data?')) {
-                document.getElementById('referralForm').reset();
-                clearSignature();
-                document.getElementById('referralDate').valueAsDate = new Date();
-                document.getElementById('signatureDate').valueAsDate = new Date();
-            }
-        }
-
-        function printForm() {
-            window.print();
-        }
-
-        // Form submission
-        document.getElementById('referralForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Check if signature is present
-            let imageData = canvas.toDataURL();
-            if (imageData === canvas.toDataURL('image/png', 0)) {
-                alert('Please provide your signature before submitting.');
-                return;
-            }
-            
-            alert('Referral form submitted successfully! You can now save this page as PDF using the "Save as PDF" button.');
-        });
+        function printForm() { window.print(); }
 
         // Initialize signature canvas
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
-        
-        // Function to toggle "Other" specialty field
+
+        // Toggle "Other" specialty field
         function toggleOtherField() {
             const select = document.getElementById('referralTo');
             const otherRow = document.getElementById('otherSpecialtyRow');
             const otherInput = document.getElementById('otherSpecialty');
-            
+
             if (select.value === 'Other') {
                 otherRow.style.display = 'block';
                 otherInput.required = true;
