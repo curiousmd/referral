@@ -29,35 +29,43 @@
 
       @page { size: 8.5in 11in; margin: 0.35in; }
 
-      html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 10px; line-height: 1.2; color: #000; -webkit-print-color-adjust: exact; }
+      html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 9.5px; line-height: 1.15; color: #000; background: #fff !important; -webkit-print-color-adjust: exact; }
 
-      /* wrapper that clips overflow so we NEVER spill to page 2 */
-      #printWrapper { width: calc(8.5in - 0.7in); height: calc(11in - 0.7in); margin: 0; position: relative; overflow: hidden; }
+      /* remove the wrapper and absolute positioning logic */
+      #printWrapper { width: auto; height: auto; margin: 0; position: static; overflow: visible; }
 
-      .form-container { max-width: none; width: auto; margin: 0; padding: 0.3in; box-shadow: none; border-radius: 0; border: 0; background: #fff; position: absolute; top: 0; left: 0; transform-origin: top left; }
+      .form-container { max-width: 100%; width: 100%; height: auto; margin: 0; padding: 0; box-shadow: none; border-radius: 0; border: 0; background: #fff !important; position: static; transform: none !important; display: flex; flex-direction: column; }
 
-      .header { margin-bottom: 8px; padding: 8px 0 10px; border-bottom: 1px solid #000; background: none !important; }
-      .brand { justify-content: center; }
-      .logo { font-size: 16px; margin: 0; color: #000; font-weight: 800; }
-      .favicon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #000; border: 1px solid #333; }
+      .header { padding: 0 0 5px; margin-bottom: 5px; border-bottom: 1px solid #000; background: #fff !important; text-align: center; }
+      .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+      .brand { text-align: left; display: flex; align-items: center; gap: 8px; }
+      .logo { font-size: 15px; margin: 0; color: #000; font-weight: 800; }
+      .favicon { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 18px; font-weight: 800; color: #000; border: 1px solid #333; }
 
-      .clinic-info { font-size: 9px; margin-top: 4px; color: #000; }
-      .form-title { font-size: 14px; margin: 8px 0 6px 0; color: #000; font-weight: 800; }
+      .clinic-info { font-size: 9px; color: #000; text-align: right; line-height: 1.2; }
+      .form-title { font-size: 14px; margin: 0; color: #000; font-weight: 800; }
       .date-field { font-size: 9px; color: #000; }
 
-      .section { margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
-      .section-title { font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
-      .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
-      .form-group { min-width: 170px; }
-      label { font-weight: 700; margin-bottom: 2px; }
-      input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9.5px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
-      textarea { height: 44px; } .large-textarea { height: 60px; }
-      .checkbox-group { gap: 6px; }
-      .priority-options { gap: 10px; }
+      .form-row-columns { display: flex; flex-direction: row; gap: 8px; width: 100%; }
+      .form-column { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+      .form-column.wide { flex: 6; } /* 60% width */
+      .form-column.narrow { flex: 4; } /* 40% width */
 
-      .signature-section { margin-top: 8px; padding: 8px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
+      .section { margin-bottom: 6px; padding: 6px; border: 1px solid #333; border-radius: 4px; background: #fff !important; break-inside: avoid; height: 100%; }
+      .section-title { font-size: 10.5px; margin-bottom: 4px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
+      .form-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+      .form-group { flex: 1; min-width: 150px; }
+      label { font-weight: 700; margin-bottom: 1px; }
+      input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9px; padding: 2px 3px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; width: 100%; }
+      textarea { height: 38px; }
+      #patientAddress { height: 60px; } /* Give address more space */
+      .large-textarea { height: 100%; min-height: 120px; } /* Make textarea fill section */
+      .checkbox-group { gap: 4px; }
+      .priority-options { gap: 8px; }
+
+      .signature-section { margin-top: 0; padding: 6px; border: 1px solid #000; border-radius: 4px; background: #fff !important; break-inside: avoid; height: 100%; }
       .signature-box { width: 220px; height: 44px; border: 1px solid #000; }
-      .signature-label { font-size: 9px; }
+      .signature-label { font-size: 9px; display: block; } /* Restore label */
 
       .urgent { color: var(--ft-danger) !important; font-weight: bold; }
     }
@@ -91,6 +99,10 @@
     .section-title { font-size: 14px; font-weight: 800; color: var(--ft-ink); margin-bottom: 12px; border-bottom: 1px solid rgba(17,17,17,0.2); padding-bottom: 5px; }
 
     .form-row { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+    .form-row-columns { display: flex; flex-direction: row; gap: 18px; width: 100%; margin-bottom: 12px; }
+    .form-column { flex: 1; display: flex; flex-direction: column; gap: 18px; }
+    .form-column.wide { flex: 6; }
+    .form-column.narrow { flex: 4; }
     .form-group { flex: 1; min-width: 200px; }
     .form-group.full-width { flex: 100%; }
 
@@ -126,72 +138,79 @@
   <div id="printWrapper">
     <div class="form-container">
       <div class="header">
-        <div class="brand">
-          <div class="favicon" aria-hidden="true">F</div>
-          <div class="logo" aria-label="FasTreat">FasTreat</div>
-        </div>
-        <div class="clinic-info">
-          2000 McGill College Avenue, 6th Floor, Montreal, Quebec, H3A 3H3<br>
-          Tel: 778-651-3154 | Fax: 844-593-1537 | Email: support@fastreat.com
+        <div class="header-top">
+          <div class="brand">
+            <div class="favicon" aria-hidden="true">F</div>
+            <div class="logo" aria-label="FasTreat">FasTreat</div>
+          </div>
+          <div class="clinic-info">
+            2000 McGill College Avenue, 6th Floor, Montreal, Quebec, H3A 3H3<br>
+            Tel: 778-651-3154 | Fax: 844-593-1537 | Email: support@fastreat.com
+          </div>
         </div>
         <div class="form-title">MEDICAL REFERRAL FORM</div>
       </div>
 
       <form id="referralForm">
-        <!-- Patient Information -->
-        <div class="section">
-          <div class="section-title">PATIENT INFORMATION</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patientLastName">Last Name *</label>
-              <input type="text" id="patientLastName" name="patientLastName" required>
-            </div>
-            <div class="form-group">
-              <label for="patientFirstName">First Name *</label>
-              <input type="text" id="patientFirstName" name="patientFirstName" required>
-            </div>
-            <div class="form-group">
-              <label for="patientDOB">Date of Birth</label>
-              <input type="date" id="patientDOB" name="patientDOB">
+        <div class="form-row-columns">
+          <div class="form-column">
+            <!-- Patient Information -->
+            <div class="section">
+              <div class="section-title">PATIENT INFORMATION</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="patientLastName">Last Name *</label>
+                  <input type="text" id="patientLastName" name="patientLastName" required>
+                </div>
+                <div class="form-group">
+                  <label for="patientFirstName">First Name *</label>
+                  <input type="text" id="patientFirstName" name="patientFirstName" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="patientDOB">Date of Birth</label>
+                  <input type="date" id="patientDOB" name="patientDOB">
+                </div>
+                <div class="form-group">
+                  <label for="healthCard">Health Card Number</label>
+                  <input type="text" id="healthCard" name="healthCard">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="patientPhone">Phone Number</label>
+                  <input type="tel" id="patientPhone" name="patientPhone">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="patientAddress">Address</label>
+                  <textarea id="patientAddress" name="patientAddress"></textarea>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="patientPhone">Phone Number</label>
-              <input type="tel" id="patientPhone" name="patientPhone">
+          <div class="form-column">
+            <!-- Referring Physician Information -->
+            <div class="section">
+              <div class="section-title">REFERRING PHYSICIAN INFORMATION</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="physicianName">Physician Name *</label>
+                  <input type="text" id="physicianName" name="physicianName" required>
+                </div>
+                <div class="form-group">
+                  <label for="physicianSpecialty">Specialty</label>
+                  <input type="text" id="physicianSpecialty" name="physicianSpecialty">
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="healthCard">Health Card Number</label>
-              <input type="text" id="healthCard" name="healthCard">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="patientAddress">Address</label>
-              <textarea id="patientAddress" name="patientAddress"></textarea>
-            </div>
-          </div>
-        </div>
 
-        <!-- Referring Physician Information -->
-        <div class="section">
-          <div class="section-title">REFERRING PHYSICIAN INFORMATION</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="physicianName">Physician Name *</label>
-              <input type="text" id="physicianName" name="physicianName" required>
-            </div>
-            <div class="form-group">
-              <label for="physicianSpecialty">Specialty</label>
-              <input type="text" id="physicianSpecialty" name="physicianSpecialty">
-            </div>
-          </div>
-        </div>
-
-        <!-- Referral Details -->
-        <div class="section">
-          <div class="section-title">REFERRAL DETAILS</div>
-          <div class="form-row">
+            <!-- Referral Details -->
+            <div class="section">
+              <div class="section-title">REFERRAL DETAILS</div>
+              <div class="form-row">
             <div class="form-group">
               <label for="referralTo">Refer To (Specialty/Department) *</label>
               <select id="referralTo" name="referralTo" required onchange="toggleOtherField()">
@@ -241,51 +260,59 @@
             </div>
           </div>
         </div>
-
-        <!-- Clinical Information -->
-        <div class="section">
-          <div class="section-title">CLINICAL INFORMATION</div>
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="reasonReferral">Reason for Referral *</label>
-              <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
-            </div>
-          </div>
+        </div>
         </div>
 
-        <!-- Signature Section -->
-        <div class="signature-section">
-          <div class="section-title">PHYSICIAN SIGNATURE</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="signatureDate">Date *</label>
-              <input type="date" id="signatureDate" name="signatureDate" required>
-            </div>
-            <div class="form-group">
-              <label for="physicianLicense">Medical License Number</label>
-              <input type="text" id="physicianLicense" name="physicianLicense">
+        <div class="form-row-columns">
+          <!-- Clinical Information -->
+          <div class="form-column wide">
+            <div class="section">
+              <div class="section-title">CLINICAL INFORMATION</div>
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="reasonReferral">Reason for Referral *</label>
+                  <textarea id="reasonReferral" name="reasonReferral" class="large-textarea" required placeholder="Please provide primary diagnosis, symptoms, or reason for referral..."></textarea>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Physician Signature *</label>
-              <div class="signature-box" id="signatureBox"></div>
-              <div class="signature-label">Please sign above (click and drag to draw signature)</div>
-              <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear Signature</button>
+
+          <!-- Signature Section -->
+          <div class="form-column narrow">
+            <div class="signature-section">
+              <div class="section-title">PHYSICIAN SIGNATURE</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="signatureDate">Date *</label>
+                  <input type="date" id="signatureDate" name="signatureDate" required>
+                </div>
+                <div class="form-group">
+                  <label for="physicianLicense">Medical License Number</label>
+                  <input type="text" id="physicianLicense" name="physicianLicense">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Physician Signature *</label>
+                  <div class="signature-box" id="signatureBox"></div>
+                  <div class="signature-label">Please sign above</div>
+                  <button type="button" class="btn btn-secondary no-print" onclick="clearSignature()" style="font-size: 12px; padding: 5px 10px;">Clear</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Buttons -->
         <div class="buttons no-print">
-          <button type="button" class="btn" onclick="printForm()">Save as PDF</button>
+          <button type="button" class="btn" onclick="window.print()">Save as PDF</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-// ===== Clean, consolidated script (fixes signature + print scaling) =====
+// ===== Clean, consolidated script =====
 (function(){
   document.addEventListener('DOMContentLoaded', function(){
     // Set today's date for signature
@@ -349,33 +376,6 @@
       // Expose clear
       window.clearSignature = function(){ ctx.clearRect(0,0,canvas.width,canvas.height); };
     }
-
-    // --- Print scale to single page and fill area ---
-    function computeScale(){
-      var wrapper = document.getElementById('printWrapper');
-      var container = document.querySelector('.form-container');
-      if(!wrapper || !container) return 1;
-      container.style.transform = '';
-      var rect = container.getBoundingClientRect();
-      var pageW = wrapper.clientWidth;
-      var pageH = wrapper.clientHeight;
-      var scaleW = pageW / rect.width;
-      var scaleH = pageH / rect.height;
-      return Math.min(scaleW, scaleH);
-    }
-    function fitToOnePage(){
-      var c = document.querySelector('.form-container');
-      if(!c) return;
-      c.style.transformOrigin = 'top left';
-      c.style.transform = 'scale(' + computeScale() + ')';
-    }
-    function resetFit(){
-      var c = document.querySelector('.form-container');
-      if(c){ c.style.transform = ''; }
-    }
-    window.printForm = function(){ fitToOnePage(); window.print(); setTimeout(resetFit, 500); };
-    window.addEventListener('beforeprint', fitToOnePage);
-    window.addEventListener('afterprint', resetFit);
 
     // --- Toggle Other field ---
     window.toggleOtherField = function(){
