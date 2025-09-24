@@ -285,122 +285,109 @@
   </div>
 
   <script>
-    // ===== Dates =====
-    /* referralDate field removed by request */
-    document.getElementById('signatureDate').valueAsDate = new Date();
+// ===== Clean, consolidated script (fixes signature + print scaling) =====
+(function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    // Set today's date for signature
+    var sigDate = document.getElementById('signatureDate');
+    if (sigDate && !sigDate.value) { try { sigDate.valueAsDate = new Date(); } catch(_) {} }
 
-    // ===== Signature Pad (pointer events, HiDPI-safe) =====
-    const signatureBox = document.getElementById('signatureBox');
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    signatureBox.appendChild(canvas);
+    // --- Signature Pad ---
+    var box = document.getElementById('signatureBox');
+    if (box) {
+      box.innerHTML = '';
+      var canvas = document.createElement('canvas');
+      box.appendChild(canvas);
+      var ctx = canvas.getContext('2d');
 
-    let hasInk = false;
+      function sizeCanvas() {
+        var dpr = window.devicePixelRatio || 1;
+        var r = box.getBoundingClientRect();
+        canvas.width  = Math.max(1, Math.round(r.width  * dpr));
+        canvas.height = Math.max(1, Math.round(r.height * dpr));
+        canvas.style.width  = r.width + 'px';
+        canvas.style.height = r.height + 'px';
+        if (ctx.setTransform) ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.strokeStyle = '#000';
+      }
+      canvas.style.display = 'block';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.touchAction = 'none';
+      canvas.style.cursor = 'crosshair';
+      sizeCanvas();
+      window.addEventListener('resize', sizeCanvas);
 
-    function resizeSignatureCanvas() {
-      const rect = signatureBox.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // so we can draw in CSS pixels
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#000';
-    }
-    resizeSignatureCanvas();
-    window.addEventListener('resize', resizeSignatureCanvas);
+      var drawing = false;
+      function pos(e) {
+        var r = canvas.getBoundingClientRect();
+        var cx = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        var cy = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+        return { x: cx - r.left, y: cy - r.top };
+      }
+      function down(e){ drawing = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); if(e.pointerId!=null && canvas.setPointerCapture){ try{ canvas.setPointerCapture(e.pointerId);}catch(err){} } if(e.preventDefault) e.preventDefault(); }
+      function move(e){ if(!drawing) return; var p = pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); if(e.preventDefault) e.preventDefault(); }
+      function up(e){ drawing = false; if(e && e.pointerId!=null && canvas.releasePointerCapture){ try{ canvas.releasePointerCapture(e.pointerId);}catch(err){} } }
 
-    let drawing = false;
-    function p(e){ const r = canvas.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
-
-    function down(e){ e.preventDefault(); drawing = true; const pos = p(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
-    function move(e){ if(!drawing) return; e.preventDefault(); const pos = p(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); hasInk = true; }
-    function up(){ drawing = false; }
-
-    if (window.PointerEvent) {
+      // Pointer API
       canvas.addEventListener('pointerdown', down);
       canvas.addEventListener('pointermove', move);
       canvas.addEventListener('pointerup', up);
       canvas.addEventListener('pointercancel', up);
       canvas.addEventListener('pointerleave', up);
-    } else {
-      // Fallback mouse/touch
-      canvas.addEventListener('mousedown', down);
-      canvas.addEventListener('mousemove', move);
-      window.addEventListener('mouseup', up);
-      canvas.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; down({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
-      canvas.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; move({preventDefault:()=>e.preventDefault(), clientX:t.clientX, clientY:t.clientY}); }, {passive:false});
-      canvas.addEventListener('touchend', up);
+
+      // Legacy fallbacks
+      if (!window.PointerEvent) {
+        canvas.addEventListener('mousedown', down);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', up);
+        canvas.addEventListener('touchstart', down, {passive:false});
+        canvas.addEventListener('touchmove', move, {passive:false});
+        canvas.addEventListener('touchend', up);
+      }
+
+      // Expose clear
+      window.clearSignature = function(){ ctx.clearRect(0,0,canvas.width,canvas.height); };
     }
 
-    // Expose globally for the button
-    window.clearSignature = function clearSignature(){
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hasInk = false;
-    };
-
-    // ===== Print scaling: fit to ONE page =====
-    const PRINT_INCH = 96;           // CSS px per inch (browser logical)
-    const PRINT_MARGIN_IN = 0.35;    // must match @page margin
-
+    // --- Print scale to single page and fill area ---
     function computeScale(){
-      const container = document.querySelector('.form-container');
-      const pageW = (8.5 - (2 * PRINT_MARGIN_IN)) * PRINT_INCH;
-      const pageH = (11  - (2 * PRINT_MARGIN_IN)) * PRINT_INCH;
-      const contentW = container.scrollWidth;
-      const contentH = container.scrollHeight;
-      return Math.min(1, pageW / contentW, pageH / contentH);
-    }
-
-    function fitToOnePage(){
-      const container = document.querySelector('.form-container');
-      if(!container) return;
-      container.style.transformOrigin = 'top left';
-      container.style.transform = `scale(${computeScale()})`;
-    }
-
-    function resetFit(){
-      const container = document.querySelector('.form-container');
-      if(!container) return;
+      var wrapper = document.getElementById('printWrapper');
+      var container = document.querySelector('.form-container');
+      if(!wrapper || !container) return 1;
       container.style.transform = '';
+      var rect = container.getBoundingClientRect();
+      var pageW = wrapper.clientWidth;
+      var pageH = wrapper.clientHeight;
+      var scaleW = pageW / rect.width;
+      var scaleH = pageH / rect.height;
+      return Math.min(scaleW, scaleH);
     }
-
-    window.printForm = function printForm(){
-      fitToOnePage();
-      window.print();
-      setTimeout(resetFit, 500);
-    };
-
+    function fitToOnePage(){
+      var c = document.querySelector('.form-container');
+      if(!c) return;
+      c.style.transformOrigin = 'top left';
+      c.style.transform = 'scale(' + computeScale() + ')';
+    }
+    function resetFit(){
+      var c = document.querySelector('.form-container');
+      if(c){ c.style.transform = ''; }
+    }
+    window.printForm = function(){ fitToOnePage(); window.print(); setTimeout(resetFit, 500); };
     window.addEventListener('beforeprint', fitToOnePage);
     window.addEventListener('afterprint', resetFit);
 
-    // ===== Toggle Other specialty =====
-    function toggleOtherField(){
-      const select = document.getElementById('referralTo');
-      const otherRow = document.getElementById('otherSpecialtyRow');
-      const otherInput = document.getElementById('otherSpecialty');
+    // --- Toggle Other field ---
+    window.toggleOtherField = function(){
+      var select = document.getElementById('referralTo');
+      var otherRow = document.getElementById('otherSpecialtyRow');
+      var otherInput = document.getElementById('otherSpecialty');
+      if(!select || !otherRow || !otherInput) return;
       if (select.value === 'Other') { otherRow.style.display = 'block'; otherInput.required = true; }
-      else { otherRow.style.display = 'none'; otherInput.required = false; otherInput.value=''; }
-    }
-    window.toggleOtherField = toggleOtherField; // ensure callable from inline onchange
-
-    // ===== Lightweight self-tests (console) =====
-    (function runSelfTests(){
-      try {
-        console.assert(typeof window.clearSignature === 'function', 'clearSignature should be defined');
-        const s = computeScale();
-        console.assert(s > 0 && s <= 1, 'computeScale should return 0<s<=1, got ' + s);
-        // Toggle test
-        const sel = document.getElementById('referralTo');
-        sel.value = 'Other'; toggleOtherField();
-        console.assert(document.getElementById('otherSpecialty').required === true, 'Other specialty should become required');
-        sel.value = ''; toggleOtherField();
-      } catch (e) {
-        console.warn('Self-test warning:', e);
-      }
-    })();
-  </script>
+      else { otherRow.style.display = 'none'; otherInput.required = false; otherInput.value = ''; }
+    };
+  });
+})();
+</script>
 </body>
 </html>
