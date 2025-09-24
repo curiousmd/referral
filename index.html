@@ -22,37 +22,38 @@
               radial-gradient(130% 130% at 70% 90%, var(--ft-accent-c) 0%, transparent 50%);
         }
 
-        /* ====== PRINT (Letter 8.5 x 11) ====== */
+        /* ====== PRINT (Letter 8.5 x 11, force single page) ====== */
         @media print {
             .no-print { display: none !important; }
 
-            @page { size: 8.5in 11in; margin: 0.5in; }
+            /* tighter margins to maximize printable area */
+            @page { size: 8.5in 11in; margin: 0.35in; }
 
-            html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 11px; line-height: 1.25; color: #000; }
+            html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 10px; line-height: 1.2; color: #000; }
 
-            .form-container { max-width: none; width: 100%; margin: 0; padding: 0.4in; box-shadow: none; border-radius: 0; border: 0; background: #fff; page-break-inside: avoid; }
+            .form-container { max-width: none; width: 100%; margin: 0; padding: 0.3in; box-shadow: none; border-radius: 0; border: 0; background: #fff; page-break-inside: avoid; overflow: visible; }
 
-            .header { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--ft-ink); background: none !important; }
-
+            .header { margin-bottom: 8px; padding: 8px 0 10px; border-bottom: 1px solid #000; background: none !important; }
             .brand { justify-content: center; }
-            .logo { font-size: 18px; margin: 0; color: #000; background: none; box-shadow: none; padding: 0; }
-            .favicon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 24px; font-weight: 800; color: #000; border: 1px solid #333; background: none !important; box-shadow: none; }
+            .logo { font-size: 16px; margin: 0; color: #000; background: none; box-shadow: none; padding: 0; font-weight: 800; }
+            .favicon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #000; border: 1px solid #333; background: none !important; box-shadow: none; }
 
-            .clinic-info { font-size: 9px; margin-top: 6px; color: #000; }
-            .form-title { font-size: 16px; margin: 12px 0 6px 0; color: #000; }
-            .date-field { font-size: 10px; color: #000; }
+            .clinic-info { font-size: 9px; margin-top: 4px; color: #000; }
+            .form-title { font-size: 14px; margin: 8px 0 6px 0; color: #000; font-weight: 800; }
+            .date-field { font-size: 9px; color: #000; }
 
-            .section { margin-bottom: 10px; padding: 10px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
-            .section-title { font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid #000; padding-bottom: 3px; color: #000; }
-            .form-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
-            .form-group { min-width: 180px; }
-            label { font-weight: bold; margin-bottom: 3px; }
-            input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 10px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
-            textarea { height: 50px; } .large-textarea { height: 70px; }
-            .checkbox-group { gap: 8px; }
-            .priority-options { gap: 12px; }
-            .signature-section { margin-top: 12px; padding: 10px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
-            .signature-box { width: 230px; height: 50px; border: 1px solid #000; }
+            .section { margin-bottom: 8px; padding: 8px; border: 1px solid #444; border-radius: 4px; background: #fff; break-inside: avoid; }
+            .section-title { font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid #000; padding-bottom: 2px; color: #000; }
+            .form-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; }
+            .form-group { min-width: 170px; }
+            label { font-weight: 700; margin-bottom: 2px; }
+            input[type="text"], input[type="email"], input[type="tel"], input[type="date"], textarea, select { font-size: 9.5px; padding: 3px 4px; border: 1px solid #333; border-radius: 3px; box-sizing: border-box; }
+            textarea { height: 44px; } .large-textarea { height: 60px; }
+            .checkbox-group { gap: 6px; }
+            .priority-options { gap: 10px; }
+
+            .signature-section { margin-top: 8px; padding: 8px; border: 1px solid #000; border-radius: 4px; background: #fff; break-inside: avoid; }
+            .signature-box { width: 220px; height: 44px; border: 1px solid #000; }
             .signature-label { font-size: 9px; }
 
             /* keep Urgent red even in print */
@@ -347,7 +348,46 @@
 
         function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        function printForm() { window.print(); }
+        /* Fit document to a single Letter page when printing */
+        const INCH = 96;                // CSS px per inch
+        const PRINT_MARGIN_IN = 0.35;   // must match @page margin
+
+        function fitToOnePage() {
+            const container = document.querySelector('.form-container');
+            if (!container) return;
+            // reset any previous scaling before measuring
+            container.style.transform = '';
+            container.style.transformOrigin = '';
+
+            const pageWidthPx  = (8.5 - (2 * PRINT_MARGIN_IN)) * INCH;
+            const pageHeightPx = (11  - (2 * PRINT_MARGIN_IN)) * INCH;
+
+            const rect = container.getBoundingClientRect();
+            const scaleW = pageWidthPx  / rect.width;
+            const scaleH = pageHeightPx / rect.height;
+            const scale = Math.min(1, scaleW, scaleH);
+
+            container.style.transformOrigin = 'top left';
+            container.style.transform = `scale(${scale})`;
+        }
+
+        function resetFit() {
+            const container = document.querySelector('.form-container');
+            if (!container) return;
+            container.style.transform = '';
+            container.style.transformOrigin = '';
+        }
+
+        function printForm() {
+            fitToOnePage();
+            window.print();
+            // Fallback in case afterprint doesn't fire
+            setTimeout(resetFit, 1000);
+        }
+
+        // Also fit automatically if user triggers Ctrl+P
+        window.addEventListener('beforeprint', fitToOnePage);
+        window.addEventListener('afterprint', resetFit);
 
         // Initialize signature canvas
         ctx.strokeStyle = '#000';
