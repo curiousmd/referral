@@ -27,9 +27,9 @@
     @media print {
       .no-print { display: none !important; }
 
-      @page { size: 8.5in 11in; margin: 0.35in; }
+      @page { size: 8.5in 11in; margin: 0; }
 
-      html, body { width: 8.5in; height: 11in; margin: 0; padding: 0; font-family: Arial, sans-serif; font-size: 8px; line-height: 1; color: #000; background: #fff !important; -webkit-print-color-adjust: exact; }
+      html, body { width: 8.5in; height: 11in; margin: 0; padding: 0.35in; box-sizing: border-box; font-family: Arial, sans-serif; font-size: 8px; line-height: 1; color: #000; background: #fff !important; -webkit-print-color-adjust: exact; }
 
       /* remove the wrapper and absolute positioning logic */
       #printWrapper { width: auto; height: auto; margin: 0; position: static; overflow: visible; }
